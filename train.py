@@ -17,6 +17,7 @@ def train(data_train_loader,model,criterion,optimizer,epoch):
         loss_list, batch_list = [], []
         for e in range(epoch):
                 for i, (images, labels, indexes) in enumerate(data_train_loader):
+                       # print("img size = ",images.size())
                         optimizer.zero_grad()
                         output = net(images)
                         loss = criterion(output, labels)
@@ -24,7 +25,7 @@ def train(data_train_loader,model,criterion,optimizer,epoch):
                         loss_list.append(loss.detach().cpu().item())
                         batch_list.append(i+1)
 
-                        if i % 10 == 0:
+                        if i % 100 == 0:
                                 print('Train - Epoch %d, Batch: %d, Loss: %f' % (e, i, loss.detach().cpu().item()))
 
                         loss.backward()
@@ -44,6 +45,18 @@ if __name__ == '__main__':
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(net.parameters(), lr=2e-3)
 
+
+        from torchsummary import summary
+        import torch
+        import torch.nn as nn
+        
+
+       # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        
+      #  model = net.to(device)
+
+        #summary(model, input_size=(1, 28, 28))
         train(loader,net,criterion,optimizer,5)
 
         

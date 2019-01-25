@@ -19,11 +19,17 @@ class LeNet(nn.Module):
 
     def forward(self, x):
         out = F.relu(self.conv1(x))
+       # print("conv1 out = ",out.size())
         out = F.max_pool2d(out, 2)
+        #print("maxpol1 out = ",out.size())
         out = F.relu(self.conv2(out))
+        #print("conv2 out = ",out.size())
         out = F.max_pool2d(out, 2)
+        #print("maxpol2 out = ",out.size())
         out = out.view(out.size(0), -1)
+        #print("outview out = ",out.size())
         out = F.relu(self.fc1(out))
+        #print("fc1 out = ",out.size())
         out = F.relu(self.fc2(out))
         out = self.fc3(out)
         out = self.softmax(out)
