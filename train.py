@@ -8,9 +8,13 @@ from torchsummary import summary
 from torchvision import datasets, transforms
 from torch.utils.data import Dataset, DataLoader
 
+train_err = []
+test_err = []
+train_acc = []
+test_acc = []
 
 def train(data_train_loader,criterion,optimizer,epoch,recordacc):
-        net.train()
+        #net.train()
         train_loss = 0
         accuracy = 0
         for i, (images, labels, indexes) in enumerate(data_train_loader):
@@ -29,7 +33,7 @@ def train(data_train_loader,criterion,optimizer,epoch,recordacc):
         return train_loss
 
 def test(data_test_loader,criterion,optimizer,epoch,recordacc):
-        net.eval()
+        #net.eval()
         test_loss = 0
         accuracy = 0
         with torch.no_grad():
@@ -53,11 +57,16 @@ def calcacc(output,labels):
         return acc
 
 def train_test():
-        epoch = 50
+        epoch = 250
         for e in range(epoch):
                 train_loss, train_acuracy = train(train_loader,criterion,optimizer,e+1,True)
                 test_loss, test_acuracy = test(test_loader,criterion,optimizer,e+1,True)
                 print('Epoch %d, Training Loss/Acc: %f//%f, Testing Loss/Acc: %f//%f' % (e+1,train_loss,train_acuracy,test_loss,test_acuracy))
+
+                train_err.append(train_loss)
+                test_err.append(test_loss)
+                train_acc.append(train_acuracy)
+                test_acc.append(test_acuracy)
 
 if __name__ == '__main__':        
         print(torch.cuda.current_device())
@@ -74,7 +83,7 @@ if __name__ == '__main__':
                     num_workers=0)
         net = model.LeNet()
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(net.parameters(), lr=2e-5)
+        optimizer = optim.Adam(net.parameters(), lr=0.01)
 
         #train(loader,criterion,optimizer,30,True)
         train_test()

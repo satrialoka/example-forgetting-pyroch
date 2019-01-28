@@ -16,7 +16,7 @@ class IndexedDataset(Dataset):
                                         transform=transforms.Compose([
                                         transforms.Pad(padding=2, fill=0, padding_mode='constant'),
                                         transforms.ToTensor(),
-                                        transforms.Normalize((0.1307,), (0.3081,))
+                                        #transforms.Normalize((0.1307,), (0.3081,))
 ]))
         elif dsname == "cifar10":
             self.ds = datasets.CIFAR10(root='data/cifar10',
