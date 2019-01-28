@@ -7,12 +7,12 @@ class IndexedDataset(Dataset):
     this class can return the index of the example in the dataset
     for example-forgetting indexing purpose (saving forgetting statistics)
     """
-    def __init__(self,dsname):
+    def __init__(self,dsname,istrain):
         self.ds = None
-        if dsname == "mnist":
+        if dsname == "mnist" :
             self.ds = datasets.MNIST(root='data/mnist',
                                         download=True,
-                                        train=True,
+                                        train=istrain,
                                         transform=transforms.Compose([
                                         transforms.Pad(padding=2, fill=0, padding_mode='constant'),
                                         transforms.ToTensor(),
