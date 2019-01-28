@@ -57,7 +57,7 @@ def calcacc(output,labels):
         return acc
 
 def train_test():
-        epoch = 250
+        epoch = 100
         for e in range(epoch):
                 train_loss, train_acuracy = train(train_loader,criterion,optimizer,e+1,True)
                 test_loss, test_acuracy = test(test_loader,criterion,optimizer,e+1,True)
