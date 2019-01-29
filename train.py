@@ -7,7 +7,7 @@ import torch.optim as optim
 from torchsummary import summary
 from torchvision import datasets, transforms
 from torch.utils.data import Dataset, DataLoader
-
+import matplotlib.pyplot as plt
 train_err = []
 test_err = []
 train_acc = []
@@ -68,22 +68,29 @@ def train_test():
                 train_acc.append(train_acuracy)
                 test_acc.append(test_acuracy)
 
+        plt.plot(train_err)
+        plt.plot(test_err)
+        plt.savefig('error.png')
+        plt.plot(train_acc)
+        plt.plot(test_acc)
+        plt.savefig('acc.png')
 if __name__ == '__main__':        
         print(torch.cuda.current_device())
         print(torch.cuda.get_device_name(0))
         train_dataset = dataloaders.IndexedDataset("mnist",istrain=True)
         train_loader = DataLoader(train_dataset,
-                    batch_size=256,
+                    batch_size=64,
                     shuffle=True,
                     num_workers=0)
         test_dataset = dataloaders.IndexedDataset("mnist",istrain=False)
         test_loader = DataLoader(test_dataset,
-                    batch_size=256,
+                    batch_size=64,
                     shuffle=False,
                     num_workers=0)
-        net = model.LeNetDropout()
+        net = model.Fenet()
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(net.parameters(), lr=0.01)
+        #optimizer = optim.Adam(net.parameters(), lr=0.01)
+        optimizer = optim.SGD(net.parameters(),lr=0.01,momentum=0.5)
 
         #train(loader,criterion,optimizer,30,True)
         train_test()

@@ -56,3 +56,29 @@ class LeNetDropout(nn.Module):
         out = self.softmax(out)
         
         return out
+
+
+class Fenet(nn.Module):
+    """
+    http://yann.lecun.com/exdb/lenet/
+
+    """
+    def __init__(self):
+        super(Fenet, self).__init__()
+        self.conv1 = nn.Conv2d(inputdim, 10, 5)
+        self.conv2 = nn.Conv2d(10, 20, 5)
+        self.fc1   = nn.Linear(20*5*5, 50)
+        self.fc2   = nn.Linear(50, 10)
+        self.softmax = nn.LogSoftmax(dim=-1)
+        self.dropout = nn.Dropout(0.5)
+    def forward(self, x):
+        out = F.relu(self.conv1(x))
+        out = F.max_pool2d(out, 2)
+        out = F.relu(self.conv2(out))
+        out = F.max_pool2d(out, 2)
+        out = out.view(out.size(0), -1)
+        out = F.relu(self.fc1(out))
+        out = self.fc2(out)
+        out = self.softmax(out)
+        
+        return out
