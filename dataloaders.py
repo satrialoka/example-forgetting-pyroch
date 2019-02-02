@@ -15,7 +15,7 @@ class IndexedDataset(Dataset):
                                         train=istrain,
                                         transform=transforms.Compose([
                                         transforms.Pad(padding=2, fill=0, padding_mode='constant'),
-                                        transforms.ToTensor(),
+                                        transforms.ToTensor()
                                         #transforms.Normalize((0.1307,), (0.3081,))
 ]))
         elif dsname == "cifar10":
@@ -25,6 +25,15 @@ class IndexedDataset(Dataset):
                                         transform=transforms.Compose([
                                         transforms.ToTensor(),
                                         transforms.Normalize((0.1307,), (0.3081,))
+]))
+        elif dsname == "fmnist":
+            self.ds = datasets.FashionMNIST(root='data/fmnist',
+                                        download=True,
+                                        train=istrain,
+                                        transform=transforms.Compose([
+                                        transforms.Pad(padding=2, fill=0, padding_mode='constant'),        
+                                        transforms.ToTensor()
+                                        #transforms.Normalize((0.1307,), (0.3081,))
 ]))
         else :
             raise Exception('dsname must be "mnist" or "cifar10", dsname was: {}'.format(dsname))
