@@ -82,7 +82,7 @@ class Fenet(nn.Module):
         
         return out
 class cifar10net(nn.Module):
-      """
+    """
     network used in forgetting example paper
 
     """

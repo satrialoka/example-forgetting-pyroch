@@ -9,19 +9,21 @@ from torchvision import datasets, transforms
 from torch.utils.data import Dataset, DataLoader
 import matplotlib.pyplot as plt
 import numpy as np
-
+#import tqdm
+#torch.set_default_tensor_type('torch.cuda.FloatTensor')
 train_err = []
 test_err = []
 train_acc = []
 test_acc = []
-batchsize = 64
+batchsize = 32
+epoch_n= 100
 
-train_dataset = dataloaders.IndexedDataset("fmnist",istrain=True)
+train_dataset = dataloaders.IndexedDataset("cifar10",istrain=True)
 train_loader = DataLoader(train_dataset,
                           batch_size=batchsize,
                           shuffle=True,
                           num_workers=0)
-test_dataset = dataloaders.IndexedDataset("fmnist",istrain=False)
+test_dataset = dataloaders.IndexedDataset("cifar10",istrain=False)
 test_loader = DataLoader(test_dataset,
                          batch_size=batchsize,
                          shuffle=False,
@@ -35,13 +37,13 @@ def train(data_train_loader,criterion,optimizer,epoch,recordacc):
         accuracy = 0
         for i, (images, labels, indexes) in enumerate(data_train_loader):
                 optimizer.zero_grad()
-                output = net(images)
-                loss = criterion(output, labels)
+                output = net(images.cuda())
+                loss = criterion(output, labels.cuda())
                 loss.backward()
                 optimizer.step()
                 train_loss += loss.item()
                 if recordacc == True :
-                        accuracy += calcacc(output,labels,indexes,istrain,epoch)
+                        accuracy += calcacc(output,labels.cuda(),indexes,istrain,epoch)
         train_loss = train_loss/len(data_train_loader)
         if recordacc == True : 
                 accuracy = accuracy/len(data_train_loader)
@@ -55,11 +57,11 @@ def test(data_test_loader,criterion,optimizer,epoch,recordacc):
         accuracy = 0
         with torch.no_grad():
                 for i, (images, labels, indexes) in enumerate(data_test_loader):
-                        output = net(images)
-                        loss = criterion(output, labels)
+                        output = net(images.cuda())
+                        loss = criterion(output, labels.cuda())
                         test_loss += loss.item()
                         if recordacc == True :
-                                accuracy += calcacc(output,labels,indexes,istrain,epoch)
+                                accuracy += calcacc(output,labels.cuda(),indexes,istrain,epoch)
                 test_loss = test_loss/len(data_test_loader)
                 if recordacc == True : 
                         accuracy = accuracy/len(data_test_loader)
@@ -67,7 +69,7 @@ def test(data_test_loader,criterion,optimizer,epoch,recordacc):
                 return test_loss
 
 prev_acci = np.zeros(len(train_loader)*batchsize)
-T = np.zeros(len(train_loader)*batchsize)
+T = np.zeros((len(train_loader)*batchsize,epoch_n))
 learnt = np.zeros(len(train_loader)*batchsize)
 
 def calcacc(output,labels,indexes, istrain,epoch):
@@ -84,7 +86,7 @@ def calcacc(output,labels,indexes, istrain,epoch):
 
                 acci = equals[i]
                 if prev_acci[indexes[i]] > acci :
-                    T[indexes[i]] = T[indexes[i]]+1
+                    T[indexes[i],epoch-1] = T[indexes[i],epoch-1]+1
                 if prev_acci[indexes[i]] < acci :
                     learnt[indexes[i]] = 1                    
                     
@@ -97,7 +99,7 @@ def calcacc(output,labels,indexes, istrain,epoch):
 def train_test():
     
     
-        epoch = 500
+        epoch = epoch_n
         for e in range(epoch):
                 train_loss, train_acuracy = train(train_loader,criterion,optimizer,e+1,True)
                 test_loss, test_acuracy = test(test_loader,criterion,optimizer,e+1,True)
@@ -122,8 +124,10 @@ def train_test():
         np.save("results\learnt.npy",learnt)
 if __name__ == '__main__':        
         print(torch.cuda.current_device())
-        print(torch.cuda.get_device_name(0))       
-        net = model.Fenet()
+        print(torch.cuda.get_device_name(0))    
+        
+        net = model.ResNet18()
+        net.cuda()
         criterion = nn.CrossEntropyLoss()
         #optimizer = optim.Adam(net.parameters(), lr=0.01)
         optimizer = optim.SGD(net.parameters(),lr=0.01,momentum=0.5)

@@ -1,5 +1,6 @@
 from torchvision import datasets, transforms
 from torch.utils.data import Dataset, DataLoader
+import utils
 
 #dsname = "mnist"
 class IndexedDataset(Dataset):
@@ -17,15 +18,16 @@ class IndexedDataset(Dataset):
                                         transforms.Pad(padding=2, fill=0, padding_mode='constant'),
                                         transforms.ToTensor()
                                         #transforms.Normalize((0.1307,), (0.3081,))
-]))
+                                        ]))
         elif dsname == "cifar10":
             self.ds = datasets.CIFAR10(root='data/cifar10',
                                         download=True,
-                                        train=True,
+                                        train=istrain,
                                         transform=transforms.Compose([
                                         transforms.ToTensor(),
-                                        transforms.Normalize((0.1307,), (0.3081,))
-]))
+                                        utils.Cutout(n_holes=1, length=16)
+                                        #transforms.Normalize((0.1307,), (0.3081,))
+                                        ]))
         elif dsname == "fmnist":
             self.ds = datasets.FashionMNIST(root='data/fmnist',
                                         download=True,
@@ -34,7 +36,7 @@ class IndexedDataset(Dataset):
                                         transforms.Pad(padding=2, fill=0, padding_mode='constant'),        
                                         transforms.ToTensor()
                                         #transforms.Normalize((0.1307,), (0.3081,))
-]))
+                                        ]))
         else :
             raise Exception('dsname must be "mnist" or "cifar10", dsname was: {}'.format(dsname))
 
