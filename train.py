@@ -16,7 +16,7 @@ test_err = []
 train_acc = []
 test_acc = []
 batchsize = 32
-epoch_n= 100
+epoch_n= 200
 
 train_dataset = dataloaders.IndexedDataset("cifar10",istrain=True)
 train_loader = DataLoader(train_dataset,
@@ -137,23 +137,3 @@ if __name__ == '__main__':
         
         train_test()
 
-        
-"""
-        from torchsummary import summary
-        import torch
-        import torch.nn as nn
-        
-
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-        
-        model = net.to(device)
-
-        summary(model, input_size=(1, 28, 28))
-
-
-        data,label = dataset.ds[1]
-        print(data)
-        for batch_idx, (data, target, idx) in enumerate(loader):
-                print('Batch idx {}, dataset index {}'.format(batch_idx, idx))
-"""

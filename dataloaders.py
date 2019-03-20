@@ -24,8 +24,8 @@ class IndexedDataset(Dataset):
                                         download=True,
                                         train=istrain,
                                         transform=transforms.Compose([
-                                        transforms.ToTensor(),
-                                        utils.Cutout(n_holes=1, length=16)
+                                        transforms.ToTensor()
+                                        ,utils.Cutout(n_holes=1, length=16)
                                         #transforms.Normalize((0.1307,), (0.3081,))
                                         ]))
         elif dsname == "fmnist":
