@@ -17,7 +17,7 @@ class IndexedDataset(Dataset):
                                         transform=transforms.Compose([
                                         transforms.Pad(padding=2, fill=0, padding_mode='constant'),
                                         transforms.ToTensor()
-                                        #transforms.Normalize((0.1307,), (0.3081,))
+                                        transforms.Normalize((0.1307,), (0.3081,))
                                         ]))
         elif dsname == "cifar10":
             self.ds = datasets.CIFAR10(root='data/cifar10',
@@ -26,7 +26,7 @@ class IndexedDataset(Dataset):
                                         transform=transforms.Compose([
                                         transforms.ToTensor()
                                         ,utils.Cutout(n_holes=1, length=16)
-                                        #transforms.Normalize((0.1307,), (0.3081,))
+                                        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261))
                                         ]))
         elif dsname == "fmnist":
             self.ds = datasets.FashionMNIST(root='data/fmnist',
@@ -35,7 +35,7 @@ class IndexedDataset(Dataset):
                                         transform=transforms.Compose([
                                         transforms.Pad(padding=2, fill=0, padding_mode='constant'),        
                                         transforms.ToTensor()
-                                        #transforms.Normalize((0.1307,), (0.3081,))
+                                        #yet to be set
                                         ]))
         else :
             raise Exception('dsname must be "mnist" or "cifar10", dsname was: {}'.format(dsname))
