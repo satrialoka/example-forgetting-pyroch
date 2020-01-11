@@ -15,7 +15,7 @@ class LeNet(nn.Module):
         self.fc1   = nn.Linear(16*5*5, 120)
         self.fc2   = nn.Linear(120, 84)
         self.fc3   = nn.Linear(84, 10)
-        self.softmax = nn.LogSoftmax(dim=-1)
+        #self.softmax = nn.LogSoftmax(dim=-1)
 
     def forward(self, x):
         out = F.relu(self.conv1(x))
@@ -26,7 +26,7 @@ class LeNet(nn.Module):
         out = F.relu(self.fc1(out))
         out = F.relu(self.fc2(out))
         out = self.fc3(out)
-        out = self.softmax(out)
+        #out = self.softmax(out)
         
         return out
 
@@ -42,7 +42,7 @@ class LeNetDropout(nn.Module):
         self.fc1   = nn.Linear(16*5*5, 120)
         self.fc2   = nn.Linear(120, 84)
         self.fc3   = nn.Linear(84, 10)
-        self.softmax = nn.LogSoftmax(dim=-1)
+        #self.softmax = nn.LogSoftmax(dim=-1)
         self.dropout = nn.Dropout(0.5)
     def forward(self, x):
         out = F.relu(self.conv1(x))
@@ -53,7 +53,7 @@ class LeNetDropout(nn.Module):
         out = F.relu(self.dropout(self.fc1(out)))
         out = F.relu(self.dropout(self.fc2(out)))
         out = self.fc3(out)
-        out = self.softmax(out)
+        #out = self.softmax(out)
         
         return out
 
@@ -69,7 +69,7 @@ class LenetFE(nn.Module):
         self.conv2 = nn.Conv2d(10, 20, 5)
         self.fc1   = nn.Linear(20*5*5, 50)
         self.fc2   = nn.Linear(50, 10)
-        self.softmax = nn.LogSoftmax(dim=-1)
+        #self.softmax = nn.LogSoftmax(dim=-1)
     def forward(self, x):
         out = F.relu(self.conv1(x))
         out = F.max_pool2d(out, 2)
@@ -78,7 +78,7 @@ class LenetFE(nn.Module):
         out = out.view(out.size(0), -1)
         out = F.relu(self.fc1(out))
         out = self.fc2(out)
-        out = self.softmax(out)
+        #out = self.softmax(out)
         
         return out
     
