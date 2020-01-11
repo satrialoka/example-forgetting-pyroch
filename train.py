@@ -29,7 +29,6 @@ test_loader = DataLoader(test_dataset,
                          shuffle=False,
                          num_workers=0)
 
-
 def train(data_train_loader,criterion,optimizer,epoch,recordacc):
         net.train()
         istrain = True
@@ -94,17 +93,13 @@ def calcacc(output,labels,indexes, istrain,epoch):
         acc = torch.mean(equals.type(torch.FloatTensor))
         return acc
 
-        
-
 def train_test():
-    
     
         epoch = epoch_n
         for e in range(epoch):
                 train_loss, train_acuracy = train(train_loader,criterion,optimizer,e+1,True)
                 test_loss, test_acuracy = test(test_loader,criterion,optimizer,e+1,True)
                 print('Epoch %d, Training Loss/Acc: %f//%f, Testing Loss/Acc: %f//%f' % (e+1,train_loss,train_acuracy,test_loss,test_acuracy))
-
                 train_err.append(train_loss)
                 test_err.append(test_loss)
                 train_acc.append(train_acuracy)
@@ -113,7 +108,6 @@ def train_test():
         plt.plot(train_err)
         plt.plot(test_err)
         plt.savefig('error.png')
-        
         plt.close()
         
         plt.plot(train_acc)
@@ -122,6 +116,7 @@ def train_test():
         
         np.save("results\forgetting_stat.npy",T)
         np.save("results\learnt.npy",learnt)
+
 if __name__ == '__main__':        
         print(torch.cuda.current_device())
         print(torch.cuda.get_device_name(0))    
@@ -133,7 +128,6 @@ if __name__ == '__main__':
         optimizer = optim.SGD(net.parameters(),lr=0.01,momentum=0.5)
 
         #train(loader,criterion,optimizer,30,True)
-        
-        
+      
         train_test()
 
